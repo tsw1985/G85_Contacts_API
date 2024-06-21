@@ -7,7 +7,17 @@ use crate::schema::contacts::{
 use serde::{Serialize, Deserialize};
 
 
-//For queries
+//To insert a contact
+#[derive(Insertable, Deserialize,Debug)]
+#[diesel(table_name = contacts)]
+pub struct NewContact {
+    //pub id: i32,  //Avoid send ID on JSON Object
+    pub name: String,
+    pub first_name : String,
+    pub phone : String
+}
+
+//For CRUD
 #[derive(Queryable, Identifiable, Selectable, Serialize)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Contact {
@@ -16,24 +26,11 @@ pub struct Contact {
     pub first_name: String,
     pub phone: String,
 }
-
-
-
-//To insert a contact
-#[derive(Insertable, Deserialize)]
-#[diesel(table_name = contacts)]
-
-#[derive(Debug)]
-pub struct NewContact {
-    pub id: i32,
-    pub name: String,
-    pub first_name : String,
-    pub phone : String
-}
-
 impl Contact {
 
     pub fn create_contact(new_contact: NewContact, conn: &mut PgConnection) -> Result<Contact, String> {
+        
+
 
         let result: QueryResult<Contact> = new_contact.insert_into(contact_table).get_result(conn);
         match result {
