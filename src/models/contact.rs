@@ -22,6 +22,8 @@ pub struct Contact {
 //To insert a contact
 #[derive(Insertable, Deserialize)]
 #[diesel(table_name = contacts)]
+
+#[derive(Debug)]
 pub struct NewContact {
     pub id: i32,
     pub name: String,
