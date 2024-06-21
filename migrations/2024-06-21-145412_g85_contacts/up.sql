@@ -1,1 +1,6 @@
--- Your SQL goes here
+CREATE TABLE contacts (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR NOT NULL,
+  first_name VARCHAR NOT NULL,
+  phone TEXT NOT NULL
+)
