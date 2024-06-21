@@ -1,8 +1,11 @@
 mod utils;
+mod controller;
+mod models;
+mod service;
+mod schema;
 mod config;
 
 use std::env;
-
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
 use diesel::{sql_types::Integer, Connection, PgConnection};
 use dotenvy::dotenv;
@@ -43,7 +46,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             //add to each controller method a db pool conection object
             .app_data(web::Data::new(pool.clone()))
-            //.configure(config::app::config_services)
+            .configure(config::api_end_points::config_services)
     }).bind(&app_url)?
       .run()
       .await
