@@ -1,7 +1,9 @@
-use actix_web::{HttpResponse, post, web::{Data, Json}};
+use actix_web::{HttpResponse,HttpRequest,get, post, web::{Data, Json}};
 use crate::config::db::Pool;
 use crate::models::contact::{NewContact,Contact};
 use crate::service::contact_service;
+
+
 
 
 #[post("/add")]
@@ -15,4 +17,11 @@ pub async fn create_contact(request: Json<NewContact>, pool: Data<Pool>) -> Http
         Ok(contact) => HttpResponse::Ok().json(contact),
         Err(message) => HttpResponse::BadRequest().body(message)
     }
+}
+
+
+#[get("/hello")]
+pub async fn hello(request: HttpRequest) -> HttpResponse {
+    println!("Hello Server!!");
+    HttpResponse::Ok().json("Hello ! I', here !")
 }
