@@ -1,6 +1,6 @@
 use actix_web::web::{self,scope};
-use crate::{controller::contact_controller::*};
-use crate::{controller::user_controller::*};
+use crate::controller::contact_controller::*;
+use crate::controller::user_controller::*;
 
 pub fn config_services(cfg: &mut web::ServiceConfig) {
 
