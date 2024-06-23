@@ -12,6 +12,9 @@ use dotenvy::dotenv;
 use utils::functions::*;
 
 
+
+
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     

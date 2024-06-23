@@ -9,6 +9,9 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
                .service(hello)
     ).
 
+    // /auth 
+    service(basic_auth).
+
     service(
        scope("/contact")
                .service(create_contact)
