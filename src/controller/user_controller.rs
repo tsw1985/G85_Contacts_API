@@ -40,6 +40,20 @@ async fn basic_auth(state: Data<Pool>, credentials: BasicAuth) -> impl Responder
             Some(pass) => {
     
 
+                let user_on_db : Result<User,String> = User::get_user_by_username_and_password(username, &mut state.get().unwrap());
+                match user_on_db {
+                    Ok(user_from_db) => {
+                        println!("okkk");
+                    },
+                    Err(_) => {
+                        print!("Error getting user by email");
+                    }
+                    
+                    
+                }
+
+
+
                 //Todo : get user and password from DataBase
                 if username.eq("pepe") && pass.eq("1234") {
 

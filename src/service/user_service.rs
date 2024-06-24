@@ -17,3 +17,10 @@ pub fn create_user(mut new_user: NewUser, pool: &web::Data<Pool>) -> Result<User
 
     return User::create_user(new_user, &mut pool.get().unwrap())
 }
+
+
+pub fn get_user_by_username_and_password(username : &str , pool: &web::Data<Pool>) -> Result<User, String>{
+    return User::get_user_by_username_and_password(username, &mut pool.get().unwrap())
+
+
+}
