@@ -11,7 +11,7 @@ use crate::service::user_service;
 
 
 
-#[get("/auth")]
+#[post("/auth")]
 async fn basic_auth(pool: Data<Pool>, credentials: BasicAuth) -> impl Responder {
 
     println!("CREDENCIALES BASIC AUTH!!");
@@ -35,12 +35,10 @@ async fn basic_auth(pool: Data<Pool>, credentials: BasicAuth) -> impl Responder 
 
         match password {
             None => {
-                HttpResponse::Unauthorized().json("Must provide a password")
+                HttpResponse::Unauthorized().json("Must provide a password!!")
             },
             Some(pass) => {
-    
 
-                //let user_on_db : Result<User,String> = User::get_user_by_username_and_password(username, &mut state.get().unwrap());
                 let user_on_db : Result<User,String> = user_service::get_user_by_username_and_password(username, &pool);
                 match user_on_db {
                     Ok(user_on_db) => {
@@ -53,8 +51,8 @@ async fn basic_auth(pool: Data<Pool>, credentials: BasicAuth) -> impl Responder 
                                 dotenv().ok();
 
                                 //if user and password match we will send the token
-                                let hash_secret = std::env::var("HASH_SECRET").expect("HASH_SECRET must be set!!!!!!!!!!!!!!!!!!!!");
-                                let mut verifier = Verifier::default();
+                                let hash_secret : String = std::env::var("HASH_SECRET").expect("HASH_SECRET must be set!!!!!!!!!!!!!!!!!!!!");
+                                let mut verifier : Verifier = Verifier::default();
 
                                 
                                 let is_valid = verifier
@@ -65,18 +63,14 @@ async fn basic_auth(pool: Data<Pool>, credentials: BasicAuth) -> impl Responder 
                                     .unwrap();
 
                                 if is_valid {
-                                    let claims = TokenClaims { id: user_on_db.id }; //ID de usuario
-                                    let token_str = claims.sign_with_key(&jwt_secret).unwrap();
+                                    let claims :TokenClaims = TokenClaims { id: user_on_db.id }; //ID de usuario
+                                    let token_str :String = claims.sign_with_key(&jwt_secret).unwrap();
                                     HttpResponse::Ok().json(token_str)
                                 } else {
                                     HttpResponse::Unauthorized().json("Incorrect username or password")
                                 }
 
-
-                                //HttpResponse::Ok().json("OK - You entered")
-
                             }else{
-                                //HttpResponse::Ok().json("OK")
                                 HttpResponse::Unauthorized().json("User and password is invalid")
                             }
                     },
