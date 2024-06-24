@@ -18,7 +18,7 @@ pub struct NewUser {
 
 
 //For CRUD Objects
-#[derive(Queryable, Identifiable, Selectable, Serialize)]
+#[derive(Queryable, Identifiable, Selectable, Serialize , Debug)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct User {
     pub id : i32,
