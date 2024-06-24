@@ -1,5 +1,5 @@
 use diesel::{prelude::*, Insertable, Queryable};
-use diesel::result::Error::DatabaseError;
+use diesel::result::Error::{self, DatabaseError};
 use crate::schema::users::username;
 use crate::schema::users::{
     self,
@@ -43,10 +43,9 @@ impl User {
     }
 
 
-    pub fn get_user_by_username_and_password(username_param : &str , conn: &mut PgConnection) 
-    -> Result<User, String>{
+    pub fn get_user_by_username_and_password(username_param : &str , conn: &mut PgConnection) -> Result<User, String>{
 
-        let result = user_table
+        let result : Result<User,Error> = user_table
             .filter(username.eq(username_param))
             .first::<User>(conn);
         
@@ -57,17 +56,6 @@ impl User {
                 _ => Err(format!("unknown error in get_user_by_username()")),
             },
         }
-
-
-       
-
-        //user_table.filter(username.eq(username_param)).first::<User>(conn)
-
-
     }
 
-
-
 }
-
-

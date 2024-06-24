@@ -1,37 +1,78 @@
+use actix_web::dev::ServiceRequest;
 use actix_web::web::{self,scope};
+use actix_web::{Error, HttpMessage};
+use actix_web_httpauth::extractors::bearer::{self, BearerAuth};
+use actix_web_httpauth::extractors::AuthenticationError;
+use actix_web_httpauth::middleware::HttpAuthentication;
+use hmac::{Hmac, Mac};
+use jwt::VerifyWithKey;
+use sha2::Sha256;
 use crate::controller::contact_controller::*;
 use crate::controller::user_controller::*;
 use serde::{Deserialize, Serialize};
 
 
-
+//This object will be sent
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct TokenClaims {
     pub id: i32,
+    pub username : String,
+    pub exp : i64
 }
 
 pub fn config_services(cfg: &mut web::ServiceConfig) {
 
+    let bearer_middleware = HttpAuthentication::bearer(validator);
+    
     cfg.service(
         scope("/api")
                .service(hello)
     ).
 
-    // /auth 
+    // UNPROTECTED : LOGIN AUTHENTIFICATION /auth 
     service(basic_auth).
-
-    service(
-       scope("/contact")
-               .service(create_contact)
-    ).
-    
+    // UNPROTECTED : Create user
     service(scope("/user")
             .service(create_user)
     ).
 
-
-
+    //Create contact . Must be protected
+    service(
+       scope("/contact")
+       .wrap(bearer_middleware)
+               .service(create_contact)
+    ).
 
     service(hello);
+}
+
+async fn validator( req: ServiceRequest,credentials: BearerAuth,) -> Result<ServiceRequest, (Error, ServiceRequest)> {
+    
+    let jwt_secret: String = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set!");
+    let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
+    let token_string = credentials.token();
+
+    let claims: Result<TokenClaims, &str> = token_string
+        .verify_with_key(&key)
+        .map_err(|_| "Invalid token");
+
+    match claims {
+        Ok(value) => {
+            req.extensions_mut().insert(value);
+            Ok(req)
+        }
+        Err(_) => {
+
+            let config = req
+                .app_data::<bearer::Config>()
+                .cloned()
+                .unwrap_or_default()
+                .scope("");
+
+            let err = AuthenticationError::from(config).into();
+            Err((err, req))
+
+        }
+    }
 }

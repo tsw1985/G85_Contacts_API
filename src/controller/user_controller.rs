@@ -1,13 +1,43 @@
-use actix_web::{HttpResponse,HttpRequest,Responder,get, post, web::{Data, Json}};
-use actix_web_httpauth::extractors::basic::BasicAuth;
+use actix_web::{dev::ServiceRequest, get, error::Error, post, web::{Data, Json}, HttpMessage, HttpRequest, HttpResponse, Responder};
+use actix_web_httpauth::extractors::{basic::BasicAuth, bearer::{self, BearerAuth},AuthenticationError};
 use argonautica::{Hasher, Verifier};
+use chrono::Utc;
 use dotenvy::dotenv;
-use jwt::SignWithKey;
+use jwt::{SignWithKey, VerifyWithKey};
 use sha2::Sha256;
 use hmac::{Hmac, Mac};
 use crate::config::{api_end_points::TokenClaims, db::Pool};
 use crate::models::user::{NewUser,User};
 use crate::service::user_service;
+
+/* 
+async fn validator( req: ServiceRequest,credentials: BearerAuth,) -> Result<ServiceRequest, (Error, ServiceRequest)> {
+
+    let jwt_secret: String = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set!");
+    let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
+    let token_string = credentials.token();
+
+    let claims: Result<TokenClaims, &str> = token_string
+        .verify_with_key(&key)
+        .map_err(|_| "Invalid token");
+
+    match claims {
+        Ok(value) => {
+            req.extensions_mut().insert(value);
+            Ok(req)
+        }
+        Err(_) => {
+            let config = req
+                .app_data::<bearer::Config>()
+                .cloned()
+                .unwrap_or_default()
+                .scope("");
+
+            let err = AuthenticationError::from(config).into();
+            Err((err, req))
+        }
+    }
+}*/
 
 
 
@@ -17,14 +47,6 @@ async fn basic_auth(pool: Data<Pool>, credentials: BasicAuth) -> impl Responder 
     println!("CREDENCIALES BASIC AUTH!!");
     println!("{:?}",credentials);
     println!("FIN CREDENCIALES BASIC AUTH!!");
-
-    let jwt_secret: Hmac<Sha256> = Hmac::new_from_slice(
-        std::env::var("JWT_SECRET")
-            .expect("JWT_SECRET must be set!")
-            .as_bytes(),
-    )
-    .unwrap();
-
 
     let username = credentials.user_id();
     let password: Option<&str> = credentials.password();
@@ -63,8 +85,30 @@ async fn basic_auth(pool: Data<Pool>, credentials: BasicAuth) -> impl Responder 
                                     .unwrap();
 
                                 if is_valid {
-                                    let claims :TokenClaims = TokenClaims { id: user_on_db.id }; //ID de usuario
+
+                                    let jwt_secret: Hmac<Sha256> = Hmac::new_from_slice(
+                                                                        std::env::var("JWT_SECRET")
+                                                                        .expect("JWT_SECRET must be set!")
+                                                                        .as_bytes(),
+                                                                    ).unwrap();
+
+                                    let expiration = Utc::now().checked_add_signed(chrono::Duration::minutes(15))
+                                                                    .expect("valid timestamp")
+                                                                    .timestamp();
+
+                                    
+                                    let claims :TokenClaims = TokenClaims { id: user_on_db.id ,
+                                                                            username : user_on_db.username ,
+                                                                            exp : expiration
+                                                                          }; //ID de usuario
+
                                     let token_str :String = claims.sign_with_key(&jwt_secret).unwrap();
+
+                                    //The token_str is formed by :
+                                    // - header
+                                    // - payload
+                                    // - signature
+
                                     HttpResponse::Ok().json(token_str)
                                 } else {
                                     HttpResponse::Unauthorized().json("Incorrect username or password")
