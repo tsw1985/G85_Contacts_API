@@ -12,7 +12,7 @@ use crate::service::user_service;
 
 
 #[get("/auth")]
-async fn basic_auth(state: Data<Pool>, credentials: BasicAuth) -> impl Responder {
+async fn basic_auth(pool: Data<Pool>, credentials: BasicAuth) -> impl Responder {
 
     println!("CREDENCIALES BASIC AUTH!!");
     println!("{:?}",credentials);
@@ -40,7 +40,8 @@ async fn basic_auth(state: Data<Pool>, credentials: BasicAuth) -> impl Responder
             Some(pass) => {
     
 
-                let user_on_db : Result<User,String> = User::get_user_by_username_and_password(username, &mut state.get().unwrap());
+                //let user_on_db : Result<User,String> = User::get_user_by_username_and_password(username, &mut state.get().unwrap());
+                let user_on_db : Result<User,String> = user_service::get_user_by_username_and_password(username, &pool);
                 match user_on_db {
                     Ok(user_on_db) => {
 
@@ -82,29 +83,11 @@ async fn basic_auth(state: Data<Pool>, credentials: BasicAuth) -> impl Responder
                     Err(_) => {
                         HttpResponse::Unauthorized().json("Error getting user by email")
                     }
-                    
-                    
                 }
-
-
-
-                
             }
         }
     }
-
-    
 }
-
-
-
-
-
-
-
-
-
-
 
 
 #[post("/add")]
