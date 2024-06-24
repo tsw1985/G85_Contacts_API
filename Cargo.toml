@@ -18,3 +18,4 @@ hmac = "0.12.1"
 jwt = "0.16.0"
 sha2 = "0.10.6"
 chrono = { version = "0.4.22", features = ["serde"] }
+jsonwebtoken = "9.3.0"

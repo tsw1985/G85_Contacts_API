@@ -1,9 +1,10 @@
 use actix_web::dev::ServiceRequest;
 use actix_web::web::{self,scope};
-use actix_web::{Error, HttpMessage};
+use actix_web::{Error, HttpMessage, ResponseError};
 use actix_web_httpauth::extractors::bearer::{self, BearerAuth};
 use actix_web_httpauth::extractors::AuthenticationError;
 use actix_web_httpauth::middleware::HttpAuthentication;
+use chrono::Utc;
 use hmac::{Hmac, Mac};
 use jwt::VerifyWithKey;
 use sha2::Sha256;
@@ -47,8 +48,10 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
     service(hello);
 }
 
-async fn validator( req: ServiceRequest,credentials: BearerAuth,) -> Result<ServiceRequest, (Error, ServiceRequest)> {
-    
+async fn validator(
+    req: ServiceRequest,
+    credentials: BearerAuth,
+) -> Result<ServiceRequest, (Error, ServiceRequest)> {
     let jwt_secret: String = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set!");
     let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
     let token_string = credentials.token();
@@ -59,11 +62,26 @@ async fn validator( req: ServiceRequest,credentials: BearerAuth,) -> Result<Serv
 
     match claims {
         Ok(value) => {
+            // Verificar la expiración del token
+            let current_timestamp :i64 = Utc::now().timestamp();
+
+            //if exp field on claim is less than NOW , not allow continue
+
+            if value.exp < current_timestamp {
+                let config = req
+                    .app_data::<bearer::Config>()
+                    .cloned()
+                    .unwrap_or_default()
+                    .scope("");
+                
+                let err = AuthenticationError::from(config).into();
+                return Err((err, req));
+            }
+            
             req.extensions_mut().insert(value);
             Ok(req)
         }
         Err(_) => {
-
             let config = req
                 .app_data::<bearer::Config>()
                 .cloned()
@@ -72,7 +90,6 @@ async fn validator( req: ServiceRequest,credentials: BearerAuth,) -> Result<Serv
 
             let err = AuthenticationError::from(config).into();
             Err((err, req))
-
         }
     }
 }

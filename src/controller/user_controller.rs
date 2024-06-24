@@ -10,37 +10,6 @@ use crate::config::{api_end_points::TokenClaims, db::Pool};
 use crate::models::user::{NewUser,User};
 use crate::service::user_service;
 
-/* 
-async fn validator( req: ServiceRequest,credentials: BearerAuth,) -> Result<ServiceRequest, (Error, ServiceRequest)> {
-
-    let jwt_secret: String = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set!");
-    let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
-    let token_string = credentials.token();
-
-    let claims: Result<TokenClaims, &str> = token_string
-        .verify_with_key(&key)
-        .map_err(|_| "Invalid token");
-
-    match claims {
-        Ok(value) => {
-            req.extensions_mut().insert(value);
-            Ok(req)
-        }
-        Err(_) => {
-            let config = req
-                .app_data::<bearer::Config>()
-                .cloned()
-                .unwrap_or_default()
-                .scope("");
-
-            let err = AuthenticationError::from(config).into();
-            Err((err, req))
-        }
-    }
-}*/
-
-
-
 #[post("/auth")]
 async fn basic_auth(pool: Data<Pool>, credentials: BasicAuth) -> impl Responder {
 
@@ -92,7 +61,7 @@ async fn basic_auth(pool: Data<Pool>, credentials: BasicAuth) -> impl Responder 
                                                                         .as_bytes(),
                                                                     ).unwrap();
 
-                                    let expiration = Utc::now().checked_add_signed(chrono::Duration::minutes(15))
+                                    let expiration = Utc::now().checked_add_signed(chrono::Duration::minutes(1))
                                                                     .expect("valid timestamp")
                                                                     .timestamp();
 
