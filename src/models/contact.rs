@@ -2,10 +2,7 @@ use diesel::{prelude::*, Insertable, Queryable};
 use diesel::result::Error::DatabaseError;
 use crate::schema::contacts::{
     self,
-    dsl::contacts as contact_table,
-    name,
-    first_name,
-    phone
+    dsl::contacts as contact_table
 };
 use serde::{Serialize, Deserialize};
 

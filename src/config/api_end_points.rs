@@ -1,6 +1,6 @@
 use actix_web::dev::ServiceRequest;
 use actix_web::web::{self,scope};
-use actix_web::{Error, HttpMessage, ResponseError};
+use actix_web::{Error, HttpMessage};
 use actix_web_httpauth::extractors::bearer::{self, BearerAuth};
 use actix_web_httpauth::extractors::AuthenticationError;
 use actix_web_httpauth::middleware::HttpAuthentication;
@@ -13,8 +13,13 @@ use crate::controller::user_controller::*;
 use serde::{Deserialize, Serialize};
 
 
-//This object will be sent
 
+//When the login is done , we send the "Claims" . This is filled on
+// "user_controller" basic_auth method.
+/*
+    The claims are formed by HEADER + PAYLOAD + SIGNATURE . So we sent
+    the beared string composed by this 3 elements
+*/
 #[derive(Serialize, Deserialize, Clone)]
 pub struct TokenClaims {
     pub id: i32,

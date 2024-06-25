@@ -1,9 +1,9 @@
-use actix_web::{dev::ServiceRequest, get, error::Error, post, web::{Data, Json}, HttpMessage, HttpRequest, HttpResponse, Responder};
-use actix_web_httpauth::extractors::{basic::BasicAuth, bearer::{self, BearerAuth},AuthenticationError};
-use argonautica::{Hasher, Verifier};
+use actix_web::{post, web::{Data, Json},HttpResponse, Responder};
+use actix_web_httpauth::extractors::{basic::BasicAuth};
+use argonautica::Verifier;
 use chrono::Utc;
 use dotenvy::dotenv;
-use jwt::{SignWithKey, VerifyWithKey};
+use jwt::SignWithKey;
 use sha2::Sha256;
 use hmac::{Hmac, Mac};
 use crate::config::{api_end_points::TokenClaims, db::Pool};
@@ -77,7 +77,6 @@ async fn basic_auth(pool: Data<Pool>, credentials: BasicAuth) -> impl Responder 
                                     // - header
                                     // - payload
                                     // - signature
-
                                     HttpResponse::Ok().json(token_str)
                                 } else {
                                     HttpResponse::Unauthorized().json("Incorrect username or password")
