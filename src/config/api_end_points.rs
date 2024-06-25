@@ -44,6 +44,7 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
                .wrap(bearer_middleware)
                .service(create_contact)
                .service(update_contact)
+               .service(delete_contact)
 
 
     ).

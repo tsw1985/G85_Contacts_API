@@ -11,3 +11,8 @@ pub fn create_contact(new_contact: NewContact, pool: &web::Data<Pool>) -> Result
 pub fn update_contact(new_contact: NewContact , id: i32,  pool: &web::Data<Pool>) -> Result<Contact,String> {
     return Contact::update_contact(new_contact, id, &mut pool.get().unwrap());
 }
+
+//DELETE
+pub fn delete_contact(id: i32,  pool: &web::Data<Pool>) -> Result<usize,String> {
+    return Contact::delete_contact(id, &mut pool.get().unwrap());
+}

@@ -60,7 +60,16 @@ impl Contact {
             .returning(Contact::as_returning())
             .get_result(pool)
             .expect("Error updating contact"))
+    }
 
+    //DELETE
+    pub fn delete_contact(id: i32 , pool: &mut PgConnection) -> Result<usize,String> {
+
+        Ok(
+             diesel::delete( contact_table.find(id))
+                   .execute(pool)
+                   .expect("Error updating contact")
+        )
     }
 
 
