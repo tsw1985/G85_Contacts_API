@@ -61,7 +61,7 @@ async fn basic_auth(pool: Data<Pool>, credentials: BasicAuth) -> impl Responder 
                                                                         .as_bytes(),
                                                                     ).unwrap();
 
-                                    let expiration = Utc::now().checked_add_signed(chrono::Duration::minutes(1))
+                                    let expiration = Utc::now().checked_add_signed(chrono::Duration::minutes(60))
                                                                     .expect("valid timestamp")
                                                                     .timestamp();
 

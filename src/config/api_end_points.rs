@@ -41,8 +41,11 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
     //Create contact . Must be protected
     service(
        scope("/contact")
-       .wrap(bearer_middleware)
+               .wrap(bearer_middleware)
                .service(create_contact)
+               .service(update_contact)
+
+
     ).
 
     service(hello);
@@ -52,6 +55,7 @@ async fn validator(
     req: ServiceRequest,
     credentials: BearerAuth,
 ) -> Result<ServiceRequest, (Error, ServiceRequest)> {
+
     let jwt_secret: String = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set!");
     let key: Hmac<Sha256> = Hmac::new_from_slice(jwt_secret.as_bytes()).unwrap();
     let token_string = credentials.token();

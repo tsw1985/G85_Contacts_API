@@ -3,6 +3,9 @@ use diesel::result::Error::DatabaseError;
 use crate::schema::contacts::{
     self,
     dsl::contacts as contact_table,
+    name,
+    first_name,
+    phone
 };
 use serde::{Serialize, Deserialize};
 
@@ -18,7 +21,7 @@ pub struct NewContact {
 }
 
 //For CRUD
-#[derive(Queryable, Identifiable, Selectable, Serialize)]
+#[derive(Queryable, Identifiable, Selectable, Serialize, AsChangeset)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Contact {
     pub id: i32,
@@ -28,9 +31,8 @@ pub struct Contact {
 }
 impl Contact {
 
+    // ADD
     pub fn create_contact(new_contact: NewContact, conn: &mut PgConnection) -> Result<Contact, String> {
-        
-
 
         let result: QueryResult<Contact> = new_contact.insert_into(contact_table).get_result(conn);
         match result {
@@ -41,6 +43,24 @@ impl Contact {
                 _ => Err(format!("unknown error"))
             }
         }
+    }
+
+
+    //UPDATE
+    pub fn update_contact(new_contact: NewContact, id: i32 , pool: &mut PgConnection) -> Result<Contact,String> {
+
+        Ok(
+            diesel::update( contact_table.find(id))
+            .set(&Contact {
+                        id,
+                        name : new_contact.name,
+                        first_name: new_contact.first_name,
+                        phone: new_contact.phone,
+                })
+            .returning(Contact::as_returning())
+            .get_result(pool)
+            .expect("Error updating contact"))
+
     }
 
 
