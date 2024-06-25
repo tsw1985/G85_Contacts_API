@@ -1,11 +1,7 @@
 use actix_web::{get, post , web::{self, Data, Json}, HttpRequest, HttpResponse};
-use diesel::update;
 use crate::config::db::Pool;
 use crate::models::contact::{NewContact,Contact};
 use crate::service::contact_service;
-
-
-
 
 #[post("/add")]
 pub async fn create_contact(request: Json<NewContact>, pool: Data<Pool>) -> HttpResponse {
@@ -42,6 +38,15 @@ pub async fn delete_contact(id: web::Path<(i32,)> , pool: Data<Pool>) -> HttpRes
 
     println!("ID TO DELETE {:?}",id);
     let result :Result<usize, String> = contact_service::delete_contact(id.into_inner().0 , &pool);
+    match result {
+        Ok(contact) => HttpResponse::Ok().json(contact),
+        Err(message) => HttpResponse::BadRequest().body(message)
+    }
+}
+
+#[post("/list")]
+pub async fn list_all_contacts(pool: Data<Pool>) -> HttpResponse {
+    let result :Result<Vec<Contact>, String> = contact_service::list_all_contacts(&pool);
     match result {
         Ok(contact) => HttpResponse::Ok().json(contact),
         Err(message) => HttpResponse::BadRequest().body(message)

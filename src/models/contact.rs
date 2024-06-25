@@ -65,11 +65,31 @@ impl Contact {
     //DELETE
     pub fn delete_contact(id: i32 , pool: &mut PgConnection) -> Result<usize,String> {
 
-        Ok(
+        /*Ok(
              diesel::delete( contact_table.find(id))
                    .execute(pool)
                    .expect("Error updating contact")
-        )
+        )*/
+
+       match diesel::delete( contact_table.find(id))
+                  .execute(pool){
+                    Ok(vale) => Ok(vale),
+                    Err(err) =>  Err(err.to_string())
+
+                  }
+    }
+
+    //GET ALL CONTACT LIST
+    pub fn list_all_contacts(pool: &mut PgConnection) -> Result<Vec<Contact>, String>{
+
+        let all_contacts = contact_table.load::<Contact>(pool);
+        match all_contacts {
+            Ok(contacts) => Ok(contacts),
+            Err(err) => Err(format!("Error loading contacts {}",err))
+        }
+
+        //TODO
+        
     }
 
 

@@ -16,3 +16,8 @@ pub fn update_contact(new_contact: NewContact , id: i32,  pool: &web::Data<Pool>
 pub fn delete_contact(id: i32,  pool: &web::Data<Pool>) -> Result<usize,String> {
     return Contact::delete_contact(id, &mut pool.get().unwrap());
 }
+
+//LIST ALL CONTACTS
+pub fn list_all_contacts(pool: &web::Data<Pool>) -> Result<Vec<Contact>, String> {
+    return Contact::list_all_contacts(&mut pool.get().unwrap());
+}

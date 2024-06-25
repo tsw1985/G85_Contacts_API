@@ -38,15 +38,14 @@ pub fn config_services(cfg: &mut web::ServiceConfig) {
             .service(create_user)
     ).
 
-    //Create contact . Must be protected
+    // *** PROTECTED **** CONTACTS END POINTS
     service(
        scope("/contact")
                .wrap(bearer_middleware)
                .service(create_contact)
                .service(update_contact)
                .service(delete_contact)
-
-
+               .service(list_all_contacts)
     ).
 
     service(hello);
