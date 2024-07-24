@@ -46,14 +46,16 @@ C , GTK 3 , Curl_lib ( API CALLS ) , and libjansson-dev libreries.
 
 The body to create/update a contact is :
 
-{
-   "name" : "Jackie",
-   "first_name" , "Chan",
-   "phone" : "777888777"
-}
+    {
+        "name" : "Jackie" ,
+        "first_name" , "Chan" ,
+        "phone" : "777888777"
+    }
 
 
 ## CLIENT ( contacts_gtk )
 
 1 . Run the script ./compile.sh . You must have installed GTK3 library on your system. On the file
     "http_api.c" are all the POST methods with hardcoded strings. All this was for playing.
+
+    ![fibob](https://github.com/tsw1985/G85_Contacts_API/blob/main/main_screen.png)
