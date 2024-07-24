@@ -60,4 +60,4 @@ The body to create/update a contact is :
 
 
 
-    ![fibob](https://github.com/tsw1985/G85_Contacts_API/blob/main/contacts_gtk/main_screen.png)
+![fibob](https://github.com/tsw1985/G85_Contacts_API/blob/main/main_screen.png)
