@@ -58,4 +58,6 @@ The body to create/update a contact is :
 1 . Run the script ./compile.sh . You must have installed GTK3 library on your system. On the file
     "http_api.c" are all the POST methods with hardcoded strings. All this was for playing.
 
-    ![fibob](https://github.com/tsw1985/G85_Contacts_API/blob/main/main_screen.png)
+
+
+    ![fibob](https://github.com/tsw1985/G85_Contacts_API/blob/main/contacts_gtk/main_screen.png)
