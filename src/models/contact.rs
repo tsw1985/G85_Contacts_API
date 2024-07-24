@@ -46,10 +46,12 @@ impl Contact {
     //UPDATE
     pub fn update_contact(new_contact: NewContact, id: i32 , pool: &mut PgConnection) -> Result<Contact,String> {
 
+        println!("ID TO UPDATe {}",id);
+
         Ok(
             diesel::update( contact_table.find(id))
             .set(&Contact {
-                        id,
+                        id : id,
                         name : new_contact.name,
                         first_name: new_contact.first_name,
                         phone: new_contact.phone,

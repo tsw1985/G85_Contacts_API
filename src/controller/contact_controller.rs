@@ -6,7 +6,7 @@ use crate::service::contact_service;
 #[post("/add")]
 pub async fn create_contact(request: Json<NewContact>, pool: Data<Pool>) -> HttpResponse {
 
-    println!("Creando contacto !!");
+    println!("Adding new contact!!");
     println!("{:?}",request);
     
     let result: Result<Contact, String> =  contact_service::create_contact(request.0, &pool);

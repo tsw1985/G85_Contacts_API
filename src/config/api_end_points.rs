@@ -71,11 +71,8 @@ async fn validator(
 
     match claims {
         Ok(value) => {
-            // Verificar la expiración del token
+
             let current_timestamp :i64 = Utc::now().timestamp();
-
-            //if exp field on claim is less than NOW , not allow continue
-
             if value.exp < current_timestamp {
                 let config = req
                     .app_data::<bearer::Config>()
