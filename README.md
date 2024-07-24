@@ -1,8 +1,8 @@
+# JWT GTK3 CURL_LIB JANSSON
+
 # G85_contacts_web_api
 
-This is a small project to work with the JWT (Json Web Token) authentification. It is running over a
-web server made it with Rust and for client side we have a small window application made it with
-C , GTK 3 , Curl_lib ( API CALLS ) , and libjansson-dev libreries.
+This is a small project (very basic, you can improve it) to work with the JWT (Json Web Token) authentification. It is running over a web server made it with Rust and for client side we have a small window application made it made with C , GTK 3 , Curl_lib ( API CALLS ) , and libjansson-dev libreries (JSON).
 
 ## Getting started
 
@@ -13,13 +13,13 @@ C , GTK 3 , Curl_lib ( API CALLS ) , and libjansson-dev libreries.
 
 1 . Install Docker and download the image of postgres : "docker pull postgres:14-alpine"
 
-2 . Create a folder called "postres" , put there the file who is on the folder "docker" called "docker-compose.yml" and run "docker compose up -d" . This will run your database container.
+2 . Create a folder called "postres" , put there the file named "docker-compose.yml" and run "docker compose up -d" .   This will run your database container.
 
 3 . Execute "diesel migration run" once you database is connected to create the database. Maybe you need 
-    install "diesel cli"
+    install "diesel cli".
 
 4 . Execute "cargo run" . If you have some problems on your compilation with Linux, you will need
-    install  the DEV-LIBS for "Postgres" , "SqlLite" and "Mysql" , search the correct package for your distribution.
+    install  the DEV-LIBS for "Postgres" , "SqlLite" and "Mysql" on your system , search the correct package for your distribution.
 
 5 . When all is ok with "cargo run" , later you will have your server working on localhost:8081
 
