@@ -37,7 +37,7 @@ This is a small project (very basic, you can improve it) to work with the JWT (J
 
 ## API POST
 
-- /auth : get JWT Token
+- /auth : get JWT Token ( login API )
 - /user/add : create a user on the system
 - /contact/add : add a contact
 - /contact/update/{id} : update a contact
