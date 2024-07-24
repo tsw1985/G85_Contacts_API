@@ -15,7 +15,7 @@ This is a small project (very basic, you can improve it) to work with the JWT (J
 
 2 . Create a folder called "postres" , put there the file named "docker-compose.yml" and run "docker compose up -d" .   This will run your database container.
 
-3 . Execute "diesel migration run" once you database is connected to create the database. Maybe you need 
+3 . On the Rust project path , execute "diesel migration run" once you database is connected to create the database. Maybe you need 
     install "diesel cli".
 
 4 . Execute "cargo run" . If you have some problems on your compilation with Linux, you will need
