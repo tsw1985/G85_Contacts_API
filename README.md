@@ -6,7 +6,7 @@ This is a small project (very basic, you can improve it) to work with the JWT (J
 
 ## Getting started
 
-- You need install this libs : curl , pthread , jansson 
+- You need install this libs : curl , pthread , jansson , gtk3 and the dev-packages for mysql , sqlLite and Postgres.
 
 
 ## How to run ? 
