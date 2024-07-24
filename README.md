@@ -9,7 +9,7 @@ This is a small project (very basic, you can improve it) to work with the JWT (J
 - You need install this libs : curl , pthread , jansson 
 
 
-## How run it ? 
+## How to run ? 
 
 1 . Install Docker and download the image of postgres : "docker pull postgres:14-alpine"
 
