@@ -8,6 +8,14 @@ This is a small project (very basic, you can improve it) to work with the JWT (J
 
 - You need install this libs : curl , pthread , jansson , gtk3 and the dev-packages for mysql , sqlLite and Postgres.
 
+apt install libjansson-dev
+apt install libcurl4-openssl-dev
+apt install build-essential
+apt install libclang-dev
+apt-get install sqlite3 libsqlite3-dev
+apt-get install libpq-dev
+
+
 
 ## How to run ? 
 
