@@ -14,6 +14,9 @@ apt install build-essential
 apt install libclang-dev
 apt-get install sqlite3 libsqlite3-dev
 apt-get install libpq-dev
+cargo install diesel_cli
+apt install libmysqlclient-dev 
+
 
 
 
