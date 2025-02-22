@@ -1,3 +1,4 @@
+-- Your SQL goes here
 CREATE TABLE IF NOT EXISTS contacts (
   id SERIAL PRIMARY KEY,
   name VARCHAR NOT NULL,
@@ -10,4 +11,3 @@ CREATE TABLE IF NOT EXISTS users (
   username VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL
 );
-
